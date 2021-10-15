@@ -1,0 +1,13 @@
+---
+title: "4180 Chattanooga Crime Data"
+author: "Thomas Raines, Yatri Patel"
+date: "10/15/2021"
+output: html_document
+---
+
+```{r}
+
+
+
+```
+
