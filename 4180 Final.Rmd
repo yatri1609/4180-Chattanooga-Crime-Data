@@ -5,7 +5,25 @@ date: "10/15/2021"
 output: html_document
 ---
 
+
 ```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+library(lubridate)
+```
+
+```{r}
+getwd()
+
+police_incident <- read_csv("Police_Incident_Data.csv")
+
+
+head(police_incident)
+
+
+
 
 
 ```
