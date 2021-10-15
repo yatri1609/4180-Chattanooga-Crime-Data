@@ -22,7 +22,7 @@ police_incident <- read_csv("Police_Incident_Data.csv")
 
 head(police_incident)
 
-
+str(police_incident$Date_Incident)
 
 
 
