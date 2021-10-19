@@ -27,4 +27,9 @@ str(police_incident$Date_Incident)
 
 
 ```
+```{r}
+censusData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_Year.csv')
+
+head(censusData)
+```
 
