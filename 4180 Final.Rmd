@@ -10,10 +10,6 @@ output:
     toc: yes
 ---
 
-<<<<<<< Updated upstream
-```{r}
-
-=======
 ```{r}
 library(tidyverse)
 library(ggplot2)
@@ -41,15 +37,11 @@ colnames(censusPopData)[3] <- "TRACT_ID"
 censusIncData <- read_csv('2017_Median_Income.csv')
 head(censusIncData)
 ```
+
 ```{r}
 #merge the income and population data
 
 censusData <- merge(censusPopData,censusIncData,by="TRACT_ID")
->>>>>>> Stashed changes
-
 ```
 
-```{r}
-
-```
 
