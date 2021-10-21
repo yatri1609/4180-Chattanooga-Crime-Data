@@ -42,6 +42,8 @@ head(censusIncData)
 #merge the income and population data
 
 censusData <- merge(censusPopData,censusIncData,by="TRACT_ID")
+
+head(censusData)
 ```
 
 
