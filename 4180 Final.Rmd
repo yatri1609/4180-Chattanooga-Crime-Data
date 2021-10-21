@@ -2,9 +2,13 @@
 title: "4180 Chattanooga Crime Data"
 author: "Thomas Raines, Yatri Patel"
 date: "10/15/2021"
-output: html_document
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 ---
-
 
 ```{r}
 library(tidyverse)
@@ -15,21 +19,29 @@ library(lubridate)
 ```
 
 ```{r}
-getwd()
-
+#read the main police incident database
 police_incident <- read_csv("Police_Incident_Data.csv")
 
-
 head(police_incident)
-
-str(police_incident$Date_Incident)
-
-
-
 ```
+
 ```{r}
-censusData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_Year.csv')
+censusPopData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_Year.csv')
 
-head(censusData)
+head(censusPopData)
+
+colnames(censusPopData)[3] <- "TRACT_ID"
 ```
+
+```{r}
+censusIncData <- read_csv('2017_Median_Income.csv')
+head(censusIncData)
+```
+
+```{r}
+#merge the income and population data
+
+censusData <- merge(censusPopData,censusIncData,by="TRACT_ID")
+```
+
 
