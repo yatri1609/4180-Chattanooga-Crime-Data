@@ -49,12 +49,7 @@ head(censusData)
 
 
 ```
-```{r}
 
-the_2017_income <- read_csv("2017_Median_Income.csv")
-
-head(the_2017_income)
-```
 
 ```{r}
 ## Make shape file for Census Population
