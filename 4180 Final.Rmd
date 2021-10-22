@@ -16,6 +16,8 @@ library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(lubridate)
+library(sf)
+library(raster)
 ```
 
 ```{r}
@@ -44,6 +46,12 @@ head(censusIncData)
 censusData <- merge(censusPopData,censusIncData,by="TRACT_ID")
 
 head(censusData)
+
+
+```
+```{r}
+##Convert to shape file
+
 ```
 
 
