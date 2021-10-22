@@ -18,6 +18,7 @@ library(reshape2)
 library(lubridate)
 library(sf)
 library(raster)
+library(ggplot2)
 ```
 
 ```{r}
@@ -56,7 +57,6 @@ head(censusData)
 censusPopShp <- read_sf("geo_export_fe8d8733-afc7-42cd-b460-c1b7a15311bb.shp")
 head(censusPopShp)
 ```
-
 ```{r}
 ## Make shape file for 2017 Median Income
 censusIncShp <- read_sf("geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
@@ -70,9 +70,18 @@ head(censusIncShp)
 censusDataShp <- st_union(censusIncShp, censusPopShp)
 
 head(censusDataShp)
+
+
+plot(censusDataShp)
+
+
+
 ```
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 8d05b5b244a7149e6436d6f38fe7f0caf8011b2c
 ```{r}
 ## Plot in ggplot
 
@@ -80,11 +89,18 @@ ggplot() +
   geom_sf(data = censusDataShp, aes(fill= `median_i_3`)) +
   theme_classic() +
   theme_dark()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d05b5b244a7149e6436d6f38fe7f0caf8011b2c
 ```
 
 
 
 
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+
+>>>>>>> 8d05b5b244a7149e6436d6f38fe7f0caf8011b2c
 
