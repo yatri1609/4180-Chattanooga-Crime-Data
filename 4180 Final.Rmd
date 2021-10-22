@@ -32,4 +32,9 @@ censusData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_
 
 head(censusData)
 ```
+```{r}
+the_2017_income <- read_csv("2017_Median_Income.csv")
+
+head(the_2017_income)
+```
 
