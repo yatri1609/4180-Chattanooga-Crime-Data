@@ -71,4 +71,20 @@ censusDataShp <- st_union(censusIncShp, censusPopShp)
 
 head(censusDataShp)
 ```
+<<<<<<< Updated upstream
+=======
+```{r}
+## Plot in ggplot
+
+ggplot() +
+  geom_sf(data = censusDataShp, aes(fill= `median_i_3`)) +
+  theme_classic() +
+  theme_dark()
+
+```
+
+
+
+
+>>>>>>> Stashed changes
 
