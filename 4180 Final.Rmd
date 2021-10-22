@@ -56,4 +56,23 @@ the_2017_income <- read_csv("2017_Median_Income.csv")
 head(the_2017_income)
 ```
 
+```{r}
+## Make shape file for Census Population
+censusPopShp <- read_sf("geo_export_fe8d8733-afc7-42cd-b460-c1b7a15311bb.shp")
+head(censusPopShp)
+```
+```{r}
+## Make shape file for 2017 Median Income
+censusIncShp <- read_sf("geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
+
+head(censusIncShp)
+```
+
+
+```{r}
+## Merge our Shape Files to one big shape file
+censusDataShp <- st_union(censusIncShp, censusPopShp)
+
+head(censusDataShp)
+```
 
