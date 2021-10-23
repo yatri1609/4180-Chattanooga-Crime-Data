@@ -98,10 +98,7 @@ ggplot() +
   geom_sf(data = censusDataShp, aes(fill= `median_i_3`)) +
   theme_classic() +
   theme_dark()
+
+
 ```
-
-
-
-
-
 
