@@ -19,7 +19,11 @@ library(lubridate)
 library(sf)
 library(raster)
 library(ggplot2)
+
+
 ```
+
+
 
 ```{r}
 #read the main police incident database
@@ -27,6 +31,9 @@ police_incident <- read_csv("Police_Incident_Data.csv")
 
 head(police_incident)
 ```
+
+
+
 
 ```{r}
 censusPopData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_Year.csv')
