@@ -102,3 +102,50 @@ ggplot() +
 
 ```
 
+<<<<<<< Updated upstream
+=======
+
+```{r}
+##Remove the Time Stamps from the Date Incidents
+police_incident$Date_Incident <- str_sub(police_incident$Date_Incident, 1, nchar(police_incident$Date_Incident)-12)
+
+head(police_incident)
+```
+
+
+
+```{r}
+##Make Incident Dates date type
+police_incident$Date_Incident <- as.Date(police_incident$Date_Incident, format = "%m/%d/%Y")
+
+
+head(police_incident)
+```
+
+```{r}
+## Get a count of incidents by date and plot it
+i<- incidence(police_incident$Date_Incident, interval = "1 day")
+
+plot(i[1:366], border = "black", color = 'blue', xlab = "Date", ylab = 'Number of incidents' )
+
+```
+```{r}
+## Plot Incidents Per Week:
+i<- incidence(police_incident$Date_Incident, interval = "1 week")
+
+plot(i[1:350], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
+```    
+
+
+```{r}
+## Plot Incidents Per Month:
+
+x<- incidence(police_incident$Date_Incident, interval = "1 month")
+
+plot(x[1:82], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
+
+
+
+```    
+
+>>>>>>> Stashed changes
