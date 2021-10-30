@@ -116,7 +116,7 @@ head(police_incident)
 
 ```{r}
 ##Make Incident Dates date type
-police_incident$Date_Incident <- as.Date(police_incident$Date_Incident, "%m/%d/%y")
+police_incident$Date_Incident <- as.Date(police_incident$Date_Incident, format = "%m/%d/%Y")
 
 
 head(police_incident)
@@ -133,7 +133,15 @@ plot(i[1:366], border = "black", color = 'blue', xlab = "Date", ylab = 'Number o
 ## Plot Incidents Per Week:
 i<- incidence(police_incident$Date_Incident, interval = "1 week")
 
-plot(i[1:53], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
+plot(i[1:350], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
 ```    
 
+
+```{r}
+## Plot Incidents Per Month:
+
+x<- incidence(police_incident$Date_Incident, interval = "1 month")
+
+plot(x[1:82], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
+```    
 
