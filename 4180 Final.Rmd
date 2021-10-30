@@ -134,6 +134,6 @@ plot(i[1:366], border = "black", color = 'blue', xlab = "Date", ylab = 'Number o
 i<- incidence(police_incident$Date_Incident, interval = "1 week")
 
 plot(i[1:53], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
-```
+```    
 
 
