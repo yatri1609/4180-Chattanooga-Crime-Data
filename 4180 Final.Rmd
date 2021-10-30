@@ -102,8 +102,6 @@ ggplot() +
 
 ```
 
-<<<<<<< Updated upstream
-=======
 
 ```{r}
 ##Remove the Time Stamps from the Date Incidents
@@ -148,4 +146,4 @@ plot(x[1:82], border = "black", color = 'blue', xlab = "week", ylab = 'Number of
 
 ```    
 
->>>>>>> Stashed changes
+
