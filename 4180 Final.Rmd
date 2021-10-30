@@ -19,8 +19,7 @@ library(lubridate)
 library(sf)
 library(raster)
 library(ggplot2)
-
-
+library(incidence)
 ```
 
 
@@ -31,8 +30,6 @@ police_incident <- read_csv("Police_Incident_Data.csv")
 
 head(police_incident)
 ```
-
-
 
 
 ```{r}
@@ -80,14 +77,7 @@ censusDataShp <- st_union(censusIncShp, censusPopShp)
 
 head(censusDataShp)
 
-
 plot(censusDataShp)
-
-
-
-
-
-
 ```
 
 
@@ -110,12 +100,9 @@ police_incident$Date_Incident <- str_sub(police_incident$Date_Incident, 1, nchar
 head(police_incident)
 ```
 
-
-
 ```{r}
 ##Make Incident Dates date type
 police_incident$Date_Incident <- as.Date(police_incident$Date_Incident, format = "%m/%d/%Y")
-
 
 head(police_incident)
 ```
@@ -127,6 +114,7 @@ i<- incidence(police_incident$Date_Incident, interval = "1 day")
 plot(i[1:366], border = "black", color = 'blue', xlab = "Date", ylab = 'Number of incidents' )
 
 ```
+
 ```{r}
 ## Plot Incidents Per Week:
 i<- incidence(police_incident$Date_Incident, interval = "1 week")
@@ -140,10 +128,14 @@ plot(i[1:350], border = "black", color = 'blue', xlab = "week", ylab = 'Number o
 
 x<- incidence(police_incident$Date_Incident, interval = "1 month")
 
-plot(x[1:82], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
-
-
+plot(x[1:82], border = "black", color = 'blue', xlab = "Month", ylab = 'Number of incidents' )
 
 ```    
 
+```{r}
+## Plot Incidents Per Month:
+y<- incidence(police_incident$Date_Incident, interval = "1 year")
+
+plot(y[1:length(y)], border = "black", color = 'blue', xlab = "Year", ylab = 'Number of incidents' )
+```
 
