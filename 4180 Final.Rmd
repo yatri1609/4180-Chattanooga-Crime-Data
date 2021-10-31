@@ -152,9 +152,11 @@ ggplotly(p)
 ```{r}
 #police incident number by incident description
 police_incident_by_description <- police_incident %>% group_by(Incident_Description) %>% summarise(frequency = n())
+
 police_incident_by_description$Incident_Description <- factor(police_incident_by_description$Incident_Description, levels = unique(police_incident_by_description$Incident_Description)[order(police_incident_by_description$frequency, decreasing = TRUE)])
+
 p <- ggplot(police_incident_by_description, aes(x = police_incident_by_description$Incident_Description, y = police_incident_by_description$frequency)) + geom_col(fill="#BE93D4") + xlab("Description") + ylab("Number of Incident") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 ggplotly(p)
 
-##hi
 ```
