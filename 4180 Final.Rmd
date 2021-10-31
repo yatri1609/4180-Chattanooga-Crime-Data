@@ -20,6 +20,7 @@ library(sf)
 library(raster)
 library(ggplot2)
 library(incidence)
+library(plotly)
 ```
 
 
@@ -108,34 +109,33 @@ head(police_incident)
 ```
 
 ```{r}
-## Get a count of incidents by date and plot it
-i<- incidence(police_incident$Date_Incident, interval = "1 day")
+police_incident_by_date <- police_incident %>% group_by(Date_Incident) %>% summarise(frequency = n())
 
-plot(i[1:366], border = "black", color = 'blue', xlab = "Date", ylab = 'Number of incidents' )
-
+plot_ly(police_incident_by_date, x = police_incident_by_date$Date_Incident, y = police_incident_by_date$frequency, name = "Police Incident by Date", type = "bar") %>% layout(
+         xaxis = list(title = "Date"),
+         yaxis = list(title = "Number of Incidents"))
 ```
 
 ```{r}
-## Plot Incidents Per Week:
-i<- incidence(police_incident$Date_Incident, interval = "1 week")
 
-plot(i[1:350], border = "black", color = 'blue', xlab = "week", ylab = 'Number of incidents' )
-```    
+police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>%
+   summarize(frequency=sum(frequency))
 
-
-```{r}
-## Plot Incidents Per Month:
-
-x<- incidence(police_incident$Date_Incident, interval = "1 month")
-
-plot(x[1:82], border = "black", color = 'blue', xlab = "Month", ylab = 'Number of incidents' )
-
-```    
+plot_ly(police_incident_by_month, x = police_incident_by_month$Date_Incident, y = police_incident_by_month$frequency, name = "Police Incident by Month", type = "bar") %>% layout(
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Number of Incidents"))
+```
 
 ```{r}
-## Plot Incidents Per Month:
-y<- incidence(police_incident$Date_Incident, interval = "1 year")
+police_incident_by_year <- police_incident_by_month %>% group_by(Date_Incident=floor_date(Date_Incident, "year")) %>%
+   summarize(frequency=sum(frequency))
 
-plot(y[1:length(y)], border = "black", color = 'blue', xlab = "Year", ylab = 'Number of incidents' )
+plot_ly(police_incident_by_year, x = police_incident_by_year$Date_Incident, y = police_incident_by_year$frequency, name = "Police Incident by Year", type = "bar") %>% layout(
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Number of Incidents"))
+```
+
+```{r}
+
 ```
 
