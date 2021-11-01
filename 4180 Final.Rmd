@@ -168,9 +168,18 @@ police_incident_by_description$Incident_Description <- factor(police_incident_by
 p <- ggplot(police_incident_by_description, aes(x = police_incident_by_description$Incident_Description, y = police_incident_by_description$frequency)) + geom_col(fill="#BE93D4") + xlab("Description") + ylab("Number of Incident") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ggplotly(p)
+
 ```
 
 ```{r}
+#plot number of incident by specific month for 2017
+police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>% summarize(frequency=sum(frequency)) 
 
+police_incident_by_month_spec <- police_incident_by_month[police_incident_by_month$Date_Incident >= "2017-01-01" & police_incident_by_month$Date_Incident <= "2017-12-31",]
+
+
+p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec$Date_Incident, y = police_incident_by_month_spec$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident")
+
+ggplotly(p)
 ```
 
