@@ -93,15 +93,20 @@ ggplot() +
   theme_classic() +
   theme_dark()
 ```
-
+## START OF MILESTONE 2 -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ```{r}
-ggplot() +
-  geom_sf(data = censusDataShp, aes(fill= population)) +
-  theme_classic() +
-  theme_dark()
+
+## Make Plot for population:
+
+
+ggplot(censusDataShp) +
+  geom_sf(aes(fill = population, color = "red"))
+  
 
 ```
+
+
 
 
 ```{r}
