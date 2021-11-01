@@ -68,17 +68,20 @@ head(censusPopShp)
 ## Make shape file for 2017 Median Income
 censusIncShp <- read_sf("geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
 
+censusIncShp <- censusIncShp %>%
+  rename(tract = tract_id)
+
 head(censusIncShp)
 ```
 
 
 ```{r}
 ## Merge our Shape Files to one big shape file
-censusDataShp <- st_union(censusIncShp, censusPopShp)
-
+censusDataShp <- st_join(censusIncShp, censusPopShp)
 head(censusDataShp)
-
 plot(censusDataShp)
+
+censusDataShp[is.na(censusDataShp)] <- 0
 ```
 
 
@@ -89,7 +92,14 @@ ggplot() +
   geom_sf(data = censusDataShp, aes(fill= `median_i_3`)) +
   theme_classic() +
   theme_dark()
+```
 
+
+```{r}
+ggplot() +
+  geom_sf(data = censusDataShp, aes(fill= population)) +
+  theme_classic() +
+  theme_dark()
 
 ```
 
