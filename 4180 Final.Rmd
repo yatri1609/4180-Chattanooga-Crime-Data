@@ -93,6 +93,8 @@ ggplot() +
   theme_classic() +
   theme_dark()
 ```
+
+
 ## START OF MILESTONE 2 -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ```{r}
@@ -186,5 +188,9 @@ police_incident_by_month_spec <- police_incident_by_month[police_incident_by_mon
 p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec$Date_Incident, y = police_incident_by_month_spec$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident")
 
 ggplotly(p)
+```
+
+```{r}
+
 ```
 
