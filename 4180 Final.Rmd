@@ -35,7 +35,7 @@ head(police_incident)
 
 
 ```{r}
-censusPopData <- read_csv('Hamilton_County_Census_Tract_Population_-_2018_ACS_Five_Year.csv')
+censusPopData <- read_csv('Census_2020_Tract_Populations.csv')
 
 head(censusPopData)
 
@@ -43,7 +43,7 @@ colnames(censusPopData)[3] <- "TRACT_ID"
 ```
 
 ```{r}
-censusIncData <- read_csv('2017_Median_Income.csv')
+censusIncData <- read_csv('2020_Median_Income.csv')
 head(censusIncData)
 ```
 
@@ -60,14 +60,14 @@ head(censusData)
 
 ```{r}
 ## Make shape file for Census Population
-censusPopShp <- read_sf("geo_export_fe8d8733-afc7-42cd-b460-c1b7a15311bb.shp")
+censusPopShp <- read_sf("Census 2020 Tract Populations/geo_export_6ea9b8b9-f93b-41bd-8242-39b59cd81ddc.shp")
 head(censusPopShp)
 ```
 
 
 ```{r}
 ## Make shape file for 2017 Median Income
-censusIncShp <- read_sf("geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
+censusIncShp <- read_sf("2020 Median Income/geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
 
 censusIncShp <- censusIncShp %>%
   rename(tract = tract_id)
@@ -78,6 +78,7 @@ head(censusIncShp)
 
 ```{r}
 ## Merge our Shape Files to one big shape file
+sf::sf_use_s2(FALSE)
 censusDataShp <- st_join(censusIncShp, censusPopShp)
 head(censusDataShp)
 plot(censusDataShp)
@@ -90,7 +91,7 @@ censusDataShp[is.na(censusDataShp)] <- 0
 ## Plot in ggplot
 
 ggplot() +
-  geom_sf(data = censusDataShp, aes(fill= `median_i_3`)) +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
   theme_classic() +
   theme_dark()
 ```
@@ -104,7 +105,7 @@ ggplot() +
 
 
 ggplot(censusDataShp) +
-  geom_sf(aes(fill = population, color = "red"))
+  geom_sf(aes(fill = total_popu, color = "red"))
   
 
 ```
@@ -196,7 +197,7 @@ police_incident_2020 <- police_incident[police_incident$Date_Incident >= "2020-0
 ```
 
 ```{r}
-##Make leaflet plot for police incident in 2017
+##Make leaflet plot for police incident in 2020
 
 incident_2020_map <- leaflet(police_incident_2020) %>%
   addTiles() %>% addCircleMarkers()
@@ -207,48 +208,48 @@ incident_2020_map
 
 ```{r}
 ##Refine Data Frame to Just show July (Highest Crime cases)
-pi_july_2020 <-  police_incident[police_incident$Date_Incident >= "2020-07-01" & police_incident$Date_Incident <= "2020-07-31",]
+pi_may_2020 <-  police_incident[police_incident$Date_Incident >= "2020-05-01" & police_incident$Date_Incident <= "2020-05-31",]
 
-head(pi_july_2017)
+head(pi_may_2020)
 
 ```
 
 ```{r}
 ## Make leaflet plot for police incidents in the month of 2020 with the highest crime (July 17')
-inc_map_july_2020 <- leaflet(pi_july_2020) %>%
+inc_map_may_2020 <- leaflet(pi_may_2020) %>%
   addTiles() %>% addMarkers()
 
-inc_map_july_2020
+inc_map_may_2020
 ```
 
 ```{r}
-##Refine DataFrame to show only part one crimes in july 2020
-pi_type1_crimes_2020 <- pi_july_2020 %>% filter(pi_july_2020$Incident_Type == "Part 1 Crimes")
+##Refine DataFrame to show only part one crimes in may 2020
+pi_type1_crimes_2020 <- pi_may_2020 %>% filter(pi_may_2020$Incident_Type == "Part 1 Crimes")
 
 ```
 
 ```{r}
 ## Make leaflet plot for part one police incidents in the month of July in 2020
-p1_july_map <- leaflet(pi_type1_crimes_2020) %>%
+p1_may_map <- leaflet(pi_type1_crimes_2020) %>%
   addTiles() %>% addMarkers()
 
-p1_july_map
+p1_may_map
 
 ```
 
 ```{r}
 ##Refine DataFrame to show only robbery crimes in july 2020
-p1_Crimes_july_2020_robbery <- pi_july_2020 %>% filter(pi_july_2020$Incident_Description == "Robbery")
+p1_Crimes_may_2020_robbery <- pi_may_2020 %>% filter(pi_may_2020$Incident_Description == "Robbery")
 
-head(p1_Crimes_july_2020_robbery)
+head(p1_Crimes_may_2020_robbery)
 
 ```
 
 ```{r}
 ## Make leaflet plot for part one police incidents (robberies) in the month of July in 2020
-p1_july_map_robbery <- leaflet(p1_Crimes_july_2020_robbery) %>%
+p1_may_map_robbery <- leaflet(p1_Crimes_may_2020_robbery) %>%
   addTiles() %>% addMarkers()
 
-p1_july_map_robbery
+p1_may_map_robbery
 
 ```
