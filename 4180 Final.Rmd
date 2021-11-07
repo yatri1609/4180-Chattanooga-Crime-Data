@@ -109,9 +109,6 @@ ggplot(censusDataShp) +
 
 ```
 
-
-
-
 ```{r}
 ##Remove the Time Stamps from the Date Incidents
 police_incident$Date_Incident <- str_sub(police_incident$Date_Incident, 1, nchar(police_incident$Date_Incident)-12)
@@ -179,11 +176,13 @@ ggplotly(p)
 
 ```
 
+## START OF MILESTONE 3 -----------------------------------------------------------------------------------------------------------------------------------------------------
+
 ```{r}
-#plot number of incident by specific month for 2017
+#plot number of incident by specific month for 2020
 police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>% summarize(frequency=sum(frequency)) 
 
-police_incident_by_month_spec <- police_incident_by_month[police_incident_by_month$Date_Incident >= "2017-01-01" & police_incident_by_month$Date_Incident <= "2017-12-31",]
+police_incident_by_month_spec <- police_incident_by_month[police_incident_by_month$Date_Incident >= "2020-01-01" & police_incident_by_month$Date_Incident <= "2020-12-31",]
 
 
 p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec$Date_Incident, y = police_incident_by_month_spec$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident")
@@ -193,55 +192,44 @@ ggplotly(p)
 
 ```{r}
 ##Make 2017 Police incident df
-police_incident_2017 <- police_incident[police_incident$Date_Incident >= "2017-01-01" & police_incident$Date_Incident <= "2017-12-31",]
+police_incident_2020 <- police_incident[police_incident$Date_Incident >= "2020-01-01" & police_incident$Date_Incident <= "2020-12-31",]
 ```
-
-
 
 ```{r}
 ##Make leaflet plot for police incident in 2017
 
-incident_2017_map <- leaflet(police_incident_2017) %>%
+incident_2020_map <- leaflet(police_incident_2020) %>%
   addTiles() %>% addCircleMarkers()
 
-incident_2017_map
+incident_2020_map
 
 ```
-
 
 ```{r}
 ##Refine Data Frame to Just show July (Highest Crime cases)
-pi_july_2017 <-  police_incident[police_incident$Date_Incident >= "2017-07-01" & police_incident$Date_Incident <= "2017-07-31",]
+pi_july_2020 <-  police_incident[police_incident$Date_Incident >= "2020-07-01" & police_incident$Date_Incident <= "2020-07-31",]
 
 head(pi_july_2017)
 
-
 ```
 
-
-
 ```{r}
-## Make leaflet plot for police incidents in the month of 2017 with the highest crime (July 17')
-inc_map_july_2017 <- leaflet(pi_july_2017) %>%
+## Make leaflet plot for police incidents in the month of 2020 with the highest crime (July 17')
+inc_map_july_2020 <- leaflet(pi_july_2020) %>%
   addTiles() %>% addMarkers()
 
-inc_map_july_2017
+inc_map_july_2020
+```
 
-
-
+```{r}
+##Refine DataFrame to show only part one crimes in july 2020
+pi_type1_crimes_2020 <- pi_july_2020 %>% filter(pi_july_2020$Incident_Type == "Part 1 Crimes")
 
 ```
 
 ```{r}
-##Refine DataFrame to show only part one crimes in july 2017
-pi_type1_crimes_2017 <- pi_july_2017 %>% filter(pi_july_2017$Incident_Type == "Part 1 Crimes")
-
-```
-
-
-```{r}
-## Make leaflet plot for part one police incidents in the month of July in 2017
-p1_july_map <- leaflet(pi_type1_crimes_2017) %>%
+## Make leaflet plot for part one police incidents in the month of July in 2020
+p1_july_map <- leaflet(pi_type1_crimes_2020) %>%
   addTiles() %>% addMarkers()
 
 p1_july_map
@@ -249,20 +237,16 @@ p1_july_map
 ```
 
 ```{r}
-##Refine DataFrame to show only robbery crimes in july 2017
-p1_Crimes_july_2017_robbery <- pi_july_2017 %>% filter(pi_july_2017$Incident_Description == "Robbery")
+##Refine DataFrame to show only robbery crimes in july 2020
+p1_Crimes_july_2020_robbery <- pi_july_2020 %>% filter(pi_july_2020$Incident_Description == "Robbery")
 
-head(p1_Crimes_july_2017_robbery)
-
-
+head(p1_Crimes_july_2020_robbery)
 
 ```
 
-
-
 ```{r}
-## Make leaflet plot for part one police incidents (robberies) in the month of July in 2017
-p1_july_map_robbery <- leaflet(p1_Crimes_july_2017_robbery) %>%
+## Make leaflet plot for part one police incidents (robberies) in the month of July in 2020
+p1_july_map_robbery <- leaflet(p1_Crimes_july_2020_robbery) %>%
   addTiles() %>% addMarkers()
 
 p1_july_map_robbery
