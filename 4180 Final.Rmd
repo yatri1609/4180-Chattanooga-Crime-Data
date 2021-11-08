@@ -207,7 +207,7 @@ incident_2020_map
 ```
 
 ```{r}
-##Refine Data Frame to Just show July (Highest Crime cases)
+##Refine Data Frame to Just show may (Highest Crime cases)
 pi_may_2020 <-  police_incident[police_incident$Date_Incident >= "2020-05-01" & police_incident$Date_Incident <= "2020-05-31",]
 
 head(pi_may_2020)
@@ -215,7 +215,7 @@ head(pi_may_2020)
 ```
 
 ```{r}
-## Make leaflet plot for police incidents in the month of 2020 with the highest crime (July 17')
+## Make leaflet plot for police incidents in the month of 2020 with the highest crime (May 20')
 inc_map_may_2020 <- leaflet(pi_may_2020) %>%
   addTiles() %>% addMarkers()
 
@@ -229,7 +229,7 @@ pi_type1_crimes_2020 <- pi_may_2020 %>% filter(pi_may_2020$Incident_Type == "Par
 ```
 
 ```{r}
-## Make leaflet plot for part one police incidents in the month of July in 2020
+## Make leaflet plot for part one police incidents in the month of may in 2020
 p1_may_map <- leaflet(pi_type1_crimes_2020) %>%
   addTiles() %>% addMarkers()
 
@@ -238,7 +238,7 @@ p1_may_map
 ```
 
 ```{r}
-##Refine DataFrame to show only robbery crimes in july 2020
+##Refine DataFrame to show only robbery crimes in may 2020
 p1_Crimes_may_2020_robbery <- pi_may_2020 %>% filter(pi_may_2020$Incident_Description == "Robbery")
 
 head(p1_Crimes_may_2020_robbery)
@@ -246,7 +246,7 @@ head(p1_Crimes_may_2020_robbery)
 ```
 
 ```{r}
-## Make leaflet plot for part one police incidents (robberies) in the month of July in 2020
+## Make leaflet plot for part one police incidents (robberies) in the month of may in 2020
 p1_may_map_robbery <- leaflet(p1_Crimes_may_2020_robbery) %>%
   addTiles() %>% addMarkers()
 
