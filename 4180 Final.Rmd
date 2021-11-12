@@ -253,3 +253,24 @@ p1_may_map_robbery <- leaflet(p1_Crimes_may_2020_robbery) %>%
 p1_may_map_robbery
 
 ```
+
+```{r}
+p <- ggplot() +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$population)) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color="red"))
+
+ggplotly(p)
+```
+
+```{r}
+p <- ggplot() +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color="red"))
+
+ggplotly(p)
+```
+
+```{r}
+
+```
+
