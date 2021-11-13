@@ -290,6 +290,11 @@ ggplotly(p)
 ```
 
 ```{r}
+p <- ggplot() +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$population)) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude), color= "red")+
+  geom_point(data = p1_Crimes_may_2020_shoplifting, aes(x=p1_Crimes_may_2020_shoplifting$Longitude, y=p1_Crimes_may_2020_shoplifting$Latitude), color = "green")
 
+ggplotly(p)
 ```
 
