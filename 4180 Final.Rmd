@@ -254,6 +254,9 @@ p1_may_map_robbery
 
 ```
 
+
+
+##Start of Milestone 4 -----------------------------------------------------------------------------------------------------------------------------
 ```{r}
 ##Make a plot overlaying the shapefile population data with the amounts of Part one crimes
 p <- ggplot() +
