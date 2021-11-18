@@ -81,7 +81,7 @@ head(censusIncShp)
 sf::sf_use_s2(FALSE)
 censusDataShp <- st_join(censusIncShp, censusPopShp)
 head(censusDataShp)
-plot(censusDataShp)
+plot(censusDataShp, max.plot = 31)
 
 censusDataShp[is.na(censusDataShp)] <- 0
 ```
@@ -90,10 +90,13 @@ censusDataShp[is.na(censusDataShp)] <- 0
 ```{r}
 ## Plot in ggplot
 
-ggplot() +
+income_plot <- ggplot() +
   geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
   theme_classic() +
-  theme_dark()
+  theme_dark() + 
+  labs(title = "Median Income for Chattanooga Tracts", fill = "Median Income")
+
+ggplotly(income_plot)
 ```
 
 
@@ -102,11 +105,13 @@ ggplot() +
 ```{r}
 
 ## Make Plot for population:
+population_plot <- ggplot() +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$total_popu)) +
+  theme_classic() +
+  theme_dark() + 
+  labs(title = "Population for Chattanooga Tracts", fill = "Total Population")
 
-
-ggplot(censusDataShp) +
-  geom_sf(aes(fill = total_popu, color = "red"))
-  
+ggplotly(population_plot)
 
 ```
 
@@ -128,7 +133,7 @@ head(police_incident)
 #plot number of incident by date 
 police_incident_by_date <- police_incident %>% group_by(Date_Incident) %>% summarise(frequency = n())
 
-p <- ggplot(police_incident_by_date, aes(x = police_incident_by_date$Date_Incident, y = police_incident_by_date$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Year") + ylab("Number of Incident")
+p <- ggplot(police_incident_by_date, aes(x = police_incident_by_date$Date_Incident, y = police_incident_by_date$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Year") + ylab("Number of Incident") + labs(title = "Police incident by Date")
 
 ggplotly(p)
 ```
@@ -138,7 +143,7 @@ ggplotly(p)
 police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>%
    summarize(frequency=sum(frequency))
 
-p <- ggplot(police_incident_by_month, aes(x = police_incident_by_month$Date_Incident, y = police_incident_by_month$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident")
+p <- ggplot(police_incident_by_month, aes(x = police_incident_by_month$Date_Incident, y = police_incident_by_month$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident") + labs(title = "Police Incident by Month")
 
 ggplotly(p)
 
@@ -149,7 +154,7 @@ ggplotly(p)
 police_incident_by_year <- police_incident_by_month %>% group_by(Date_Incident=floor_date(Date_Incident, "year")) %>%
    summarize(frequency=sum(frequency))
 
-p <- ggplot(police_incident_by_year, aes(x = police_incident_by_year$Date_Incident, y = police_incident_by_year$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Year") + ylab("Number of Incident")
+p <- ggplot(police_incident_by_year, aes(x = police_incident_by_year$Date_Incident, y = police_incident_by_year$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Year") + ylab("Number of Incident") + labs(title = "Police Incident by Year")
 
 ggplotly(p)
 ```
@@ -160,7 +165,7 @@ police_incident_by_type <- police_incident %>% group_by(Incident_Type) %>% summa
 
 police_incident_by_type$Incident_Type <- factor(police_incident_by_type$Incident_Type, levels = unique(police_incident_by_type$Incident_Type)[order(police_incident_by_type$frequency, decreasing = TRUE)])
 
-p <- ggplot(police_incident_by_type, aes(x = police_incident_by_type$Incident_Type, y = police_incident_by_type$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Type") + ylab("Number of Incident")
+p <- ggplot(police_incident_by_type, aes(x = police_incident_by_type$Incident_Type, y = police_incident_by_type$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Type") + ylab("Number of Incident") + labs(title = "Police Incident by Incident Type")
 
 ggplotly(p)
 ```
@@ -171,7 +176,7 @@ police_incident_by_description <- police_incident %>% group_by(Incident_Descript
 
 police_incident_by_description$Incident_Description <- factor(police_incident_by_description$Incident_Description, levels = unique(police_incident_by_description$Incident_Description)[order(police_incident_by_description$frequency, decreasing = TRUE)])
 
-p <- ggplot(police_incident_by_description, aes(x = police_incident_by_description$Incident_Description, y = police_incident_by_description$frequency)) + geom_col(fill="#BE93D4") + xlab("Description") + ylab("Number of Incident") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+p <- ggplot(police_incident_by_description, aes(x = police_incident_by_description$Incident_Description, y = police_incident_by_description$frequency)) + geom_col(fill="#BE93D4") + xlab("Description") + ylab("Number of Incident") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +  labs(title = "Police Incident by Incident Description")
 
 ggplotly(p)
 
@@ -186,23 +191,16 @@ police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=f
 police_incident_by_month_spec <- police_incident_by_month[police_incident_by_month$Date_Incident >= "2020-01-01" & police_incident_by_month$Date_Incident <= "2020-12-31",]
 
 
-p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec$Date_Incident, y = police_incident_by_month_spec$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident")
+p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec$Date_Incident, y = police_incident_by_month_spec$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Month") + ylab("Number of Incident") + labs(title = "Police Incident for 2020 aggregated by Month")
 
 ggplotly(p)
 ```
 
 ```{r}
-##Make 2017 Police incident df
+##Make 2020 Police incident df
 police_incident_2020 <- police_incident[police_incident$Date_Incident >= "2020-01-01" & police_incident$Date_Incident <= "2020-12-31",]
-```
 
-```{r}
-##Make leaflet plot for police incident in 2020
-
-incident_2020_map <- leaflet(police_incident_2020) %>%
-  addTiles() %>% addCircleMarkers()
-
-incident_2020_map
+head(police_incident_2020)
 
 ```
 
@@ -216,8 +214,9 @@ head(pi_may_2020)
 
 ```{r}
 ## Make leaflet plot for police incidents in the month of 2020 with the highest crime (May 20')
-inc_map_may_2020 <- leaflet(pi_may_2020) %>%
-  addTiles() %>% addMarkers()
+inc_map_may_2020 <- ggplot() +
+  geom_sf(data = censusDataShp, aes()) +
+  geom_point(data = pi_may_2020, aes(x=pi_may_2020$Longitude, y=pi_may_2020$Latitude, color="red"))
 
 inc_map_may_2020
 ```
@@ -230,8 +229,9 @@ pi_type1_crimes_2020 <- pi_may_2020 %>% filter(pi_may_2020$Incident_Type == "Par
 
 ```{r}
 ## Make leaflet plot for part one police incidents in the month of may in 2020
-p1_may_map <- leaflet(pi_type1_crimes_2020) %>%
-  addTiles() %>% addMarkers()
+p1_may_map <- ggplot() +
+  geom_sf(data = censusDataShp, aes()) +
+  geom_point(data = pi_type1_crimes_2020, aes(x=pi_type1_crimes_2020$Longitude, y=pi_type1_crimes_2020$Latitude, color="red"))
 
 p1_may_map
 
@@ -247,8 +247,10 @@ head(p1_Crimes_may_2020_robbery)
 
 ```{r}
 ## Make leaflet plot for part one police incidents (robberies) in the month of may in 2020
-p1_may_map_robbery <- leaflet(p1_Crimes_may_2020_robbery) %>%
-  addTiles() %>% addMarkers()
+p1_may_map_robbery <- ggplot() +
+  geom_sf(data = censusDataShp, aes()) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color="red"))
+
 
 p1_may_map_robbery
 
