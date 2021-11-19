@@ -216,9 +216,9 @@ head(pi_may_2020)
 ## Make leaflet plot for police incidents in the month of 2020 with the highest crime (May 20')
 inc_map_may_2020 <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
-  geom_point(data = pi_may_2020, aes(x=pi_may_2020$Longitude, y=pi_may_2020$Latitude, color="red"))
+  geom_point(data = pi_may_2020, aes(x=pi_may_2020$Longitude, y=pi_may_2020$Latitude, color=pi_may_2020$Incident_Type))  + labs(title="Location of Police Inicidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Type") +theme(legend.position="bottom")
 
-inc_map_may_2020
+ggplotly(inc_map_may_2020)
 ```
 
 ```{r}
@@ -231,9 +231,10 @@ pi_type1_crimes_2020 <- pi_may_2020 %>% filter(pi_may_2020$Incident_Type == "Par
 ## Make leaflet plot for part one police incidents in the month of may in 2020
 p1_may_map <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
-  geom_point(data = pi_type1_crimes_2020, aes(x=pi_type1_crimes_2020$Longitude, y=pi_type1_crimes_2020$Latitude, color="red"))
+  geom_point(data = pi_type1_crimes_2020, aes(x=pi_type1_crimes_2020$Longitude, y=pi_type1_crimes_2020$Latitude, color=pi_type1_crimes_2020$Incident_Description)) + labs(title="Location of Part 1 Police Inicidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Description") +theme(legend.position="bottom")
 
-p1_may_map
+
+ggplotly(p1_may_map)
 
 ```
 
@@ -249,10 +250,10 @@ head(p1_Crimes_may_2020_robbery)
 ## Make leaflet plot for part one police incidents (robberies) in the month of may in 2020
 p1_may_map_robbery <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
-  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color="red"))
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type")
 
 
-p1_may_map_robbery
+ggplotly(p1_may_map_robbery)
 
 ```
 
@@ -262,12 +263,20 @@ p1_may_map_robbery
 ```{r}
 ##Make a plot overlaying the shapefile population data with the amounts of Part one crimes
 p <- ggplot() +
-  geom_sf(data = censusDataShp, aes(fill=censusDataShp$population)) +
-  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color="red"))
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$total_popu)) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type", fill= "Population")
 
 ggplotly(p)
 ```
 
+```{r}
+##Make a plot overlaying the shapefile income data with the amounts of Part one crimes
+p <- ggplot() +
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
+  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type", fill= "Median Income")
+
+ggplotly(p)
+```
 
 
 ```{r}
@@ -278,27 +287,28 @@ p1_Crimes_may_2020_shoplifting <- pi_may_2020 %>% filter(pi_may_2020$Incident_De
 
 head(p1_Crimes_may_2020_shoplifting)
 
-
+#combined dataframe for robbery and shoplifting
+p1_shoplift_robbery <-  rbind(p1_Crimes_may_2020_robbery,p1_Crimes_may_2020_shoplifting)
 ```
-
-
-
 
 
 ```{r}
 p <- ggplot() +
   geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
-  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude), color= "red")+
-  geom_point(data = p1_Crimes_may_2020_shoplifting, aes(x=p1_Crimes_may_2020_shoplifting$Longitude, y=p1_Crimes_may_2020_shoplifting$Latitude), color = "green")
+  geom_point(data = p1_shoplift_robbery, aes(x=p1_shoplift_robbery$Longitude, y=p1_shoplift_robbery$Latitude, color= p1_shoplift_robbery$Incident_Description))+
+ labs(title="Location of Robberies and Shoplifting incidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Description", fill= "Median Income")
+
 
 ggplotly(p)
 ```
 
+
 ```{r}
 p <- ggplot() +
-  geom_sf(data = censusDataShp, aes(fill=censusDataShp$population)) +
-  geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude), color= "red")+
-  geom_point(data = p1_Crimes_may_2020_shoplifting, aes(x=p1_Crimes_may_2020_shoplifting$Longitude, y=p1_Crimes_may_2020_shoplifting$Latitude), color = "green")
+  geom_sf(data = censusDataShp, aes(fill=censusDataShp$total_popu)) +
+  geom_point(data = p1_shoplift_robbery, aes(x=p1_shoplift_robbery$Longitude, y=p1_shoplift_robbery$Latitude, color= p1_shoplift_robbery$Incident_Description))+
+ labs(title="Location of Robberies and Shoplifting incidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Description", fill= "Population")
+
 
 ggplotly(p)
 ```
