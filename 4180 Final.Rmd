@@ -9,8 +9,9 @@ output:
   pdf_document:
     toc: yes
 ---
-
+## Libraries ------------------------------------------------------------------------------------------------ 
 ```{r}
+
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
@@ -18,20 +19,30 @@ library(reshape2)
 library(lubridate)
 library(sf)
 library(raster)
-library(ggplot2)
 library(incidence)
 library(plotly)
-library(leaflet)
+
 ```
+
+
+
+
+
+#### Read the main police incident database
 
 
 
 ```{r}
-#read the main police incident database
+#
 police_incident <- read_csv("Police_Incident_Data.csv")
 
 head(police_incident)
 ```
+
+
+#### Read the tract populations dataframe
+
+
 
 
 ```{r}
@@ -42,13 +53,26 @@ head(censusPopData)
 colnames(censusPopData)[3] <- "TRACT_ID"
 ```
 
+
+
+#### Make a DataFrame for Income data
+
+
+
 ```{r}
 censusIncData <- read_csv('2020_Median_Income.csv')
 head(censusIncData)
 ```
 
+
+
+
+#### Merge the income and population data by Tract ID
+
+
+
 ```{r}
-#merge the income and population data
+#
 
 censusData <- merge(censusPopData,censusIncData,by="TRACT_ID")
 
@@ -58,15 +82,28 @@ head(censusData)
 ```
 
 
+
+#### Make shape file for Census Population
+
+
+
 ```{r}
-## Make shape file for Census Population
+## 
 censusPopShp <- read_sf("Census 2020 Tract Populations/geo_export_6ea9b8b9-f93b-41bd-8242-39b59cd81ddc.shp")
 head(censusPopShp)
 ```
 
 
+
+
+#### Make shape file for 2017 Median Income
+
+
+
+
+
 ```{r}
-## Make shape file for 2017 Median Income
+## 
 censusIncShp <- read_sf("2020 Median Income/geo_export_43a087a5-8ff8-4733-9a99-dd658a9c17f4.shp")
 
 censusIncShp <- censusIncShp %>%
@@ -76,8 +113,14 @@ head(censusIncShp)
 ```
 
 
+
+
+#### Merge our Shape Files to one big shape file
+
+
+
 ```{r}
-## Merge our Shape Files to one big shape file
+## 
 sf::sf_use_s2(FALSE)
 censusDataShp <- st_join(censusIncShp, censusPopShp)
 head(censusDataShp)
@@ -87,8 +130,13 @@ censusDataShp[is.na(censusDataShp)] <- 0
 ```
 
 
+
+#### Plot our median Income by tract geometries
+
+
+
 ```{r}
-## Plot in ggplot
+## 
 
 income_plot <- ggplot() +
   geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
@@ -101,6 +149,13 @@ ggplotly(income_plot)
 
 
 ## START OF MILESTONE 2 -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#### Make Plot for population:
+
+
 
 ```{r}
 
@@ -115,22 +170,46 @@ ggplotly(population_plot)
 
 ```
 
+
+
+
+#### Remove the Time Stamps from the Date Incidents
+
+
+
+
 ```{r}
-##Remove the Time Stamps from the Date Incidents
+##
 police_incident$Date_Incident <- str_sub(police_incident$Date_Incident, 1, nchar(police_incident$Date_Incident)-12)
 
 head(police_incident)
 ```
 
+
+
+
+#### Make Incident Dates date type
+
+
+
+
 ```{r}
-##Make Incident Dates date type
+##
 police_incident$Date_Incident <- as.Date(police_incident$Date_Incident, format = "%m/%d/%Y")
 
 head(police_incident)
 ```
 
+
+
+
+#### Plot number of incidents by date 
+
+
+
+
 ```{r}
-#plot number of incident by date 
+#
 police_incident_by_date <- police_incident %>% group_by(Date_Incident) %>% summarise(frequency = n())
 
 p <- ggplot(police_incident_by_date, aes(x = police_incident_by_date$Date_Incident, y = police_incident_by_date$frequency)) + geom_col(fill="#BE93D4") + geom_smooth() + xlab("Year") + ylab("Number of Incident") + labs(title = "Police incident by Date")
@@ -138,8 +217,15 @@ p <- ggplot(police_incident_by_date, aes(x = police_incident_by_date$Date_Incide
 ggplotly(p)
 ```
 
+
+
+#### Plot number of incident by month 
+
+
+
+
 ```{r}
-#plot number of incident by month 
+#
 police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>%
    summarize(frequency=sum(frequency))
 
@@ -149,8 +235,16 @@ ggplotly(p)
 
 ```
 
+
+
+
+#### Plot number of incidents by year
+
+
+
+
 ```{r}
-#plot number of incident by year
+#
 police_incident_by_year <- police_incident_by_month %>% group_by(Date_Incident=floor_date(Date_Incident, "year")) %>%
    summarize(frequency=sum(frequency))
 
@@ -159,8 +253,15 @@ p <- ggplot(police_incident_by_year, aes(x = police_incident_by_year$Date_Incide
 ggplotly(p)
 ```
 
+
+
+
+#### Plot police incident number by incident type
+
+
+
 ```{r}
-#police incident number by incident type
+#
 police_incident_by_type <- police_incident %>% group_by(Incident_Type) %>% summarise(frequency = n())
 
 police_incident_by_type$Incident_Type <- factor(police_incident_by_type$Incident_Type, levels = unique(police_incident_by_type$Incident_Type)[order(police_incident_by_type$frequency, decreasing = TRUE)])
@@ -170,8 +271,16 @@ p <- ggplot(police_incident_by_type, aes(x = police_incident_by_type$Incident_Ty
 ggplotly(p)
 ```
 
+
+
+#### Plot police incident number by incident description
+
+
+
+
+
 ```{r}
-#police incident number by incident description
+#
 police_incident_by_description <- police_incident %>% group_by(Incident_Description) %>% summarise(frequency = n())
 
 police_incident_by_description$Incident_Description <- factor(police_incident_by_description$Incident_Description, levels = unique(police_incident_by_description$Incident_Description)[order(police_incident_by_description$frequency, decreasing = TRUE)])
@@ -182,10 +291,22 @@ ggplotly(p)
 
 ```
 
-## START OF MILESTONE 3 --------------------------------------------Some Graphs were Re-Done for Milestone 5 --------------------------------------------------------------------------------------
+
+
+
+## START OF MILESTONE 3 (Part of these are now milestone 5) ----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+#### Plot number of incidents by specific month for 2020
+
+
+
 
 ```{r}
-#plot number of incident by specific month for 2020
+#
 police_incident_by_month <- police_incident_by_date %>% group_by(Date_Incident=floor_date(Date_Incident, "month")) %>% summarize(frequency=sum(frequency)) 
 
 police_incident_by_month_spec <- police_incident_by_month[police_incident_by_month$Date_Incident >= "2020-01-01" & police_incident_by_month$Date_Incident <= "2020-12-31",]
@@ -196,24 +317,44 @@ p <- ggplot(police_incident_by_month_spec, aes(x = police_incident_by_month_spec
 ggplotly(p)
 ```
 
+
+
+#### Make a 2020 Police incident dataframe
+
+
+
 ```{r}
-##Make 2020 Police incident df
+##
 police_incident_2020 <- police_incident[police_incident$Date_Incident >= "2020-01-01" & police_incident$Date_Incident <= "2020-12-31",]
 
 head(police_incident_2020)
 
 ```
 
+
+
+#### Refine Data Frame to Just show May (Highest Crime cases)
+
+
+
+
 ```{r}
-##Refine Data Frame to Just show may (Highest Crime cases)
+##
 pi_may_2020 <-  police_incident[police_incident$Date_Incident >= "2020-05-01" & police_incident$Date_Incident <= "2020-05-31",]
 
 head(pi_may_2020)
 
 ```
 
+
+
+#### Make plotly plot for police incidents in the month of May 2020 by incident types (Milestone 5)
+
+
+
+
 ```{r}
-## Make plotly plot for police incidents in the month of May 2020 by incident types (Milestone 5)
+## 
 inc_map_may_2020 <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
   geom_point(data = pi_may_2020, aes(x=pi_may_2020$Longitude, y=pi_may_2020$Latitude, color=pi_may_2020$Incident_Type))  + labs(title="Location of Police Inicidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Type") +theme(legend.position="bottom")
@@ -221,14 +362,27 @@ inc_map_may_2020 <- ggplot() +
 ggplotly(inc_map_may_2020)
 ```
 
+
+
+#### Refine DataFrame to show only part one crimes in may 2020
+
+
+
 ```{r}
-##Refine DataFrame to show only part one crimes in may 2020
+##
 pi_type1_crimes_2020 <- pi_may_2020 %>% filter(pi_may_2020$Incident_Type == "Part 1 Crimes")
 
 ```
 
+
+
+####  Make Plotly plot for all part one police incidents in the month of may in 2020 (Milestone 5)
+
+
+
+
 ```{r}
-## Make Plotly plot for all part one police incidents in the month of may in 2020 (Milestone 5)
+## 
 p1_may_map <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
   geom_point(data = pi_type1_crimes_2020, aes(x=pi_type1_crimes_2020$Longitude, y=pi_type1_crimes_2020$Latitude, color=pi_type1_crimes_2020$Incident_Description)) + labs(title="Location of Part 1 Police Inicidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Description") +theme(legend.position="bottom")
@@ -238,16 +392,28 @@ ggplotly(p1_may_map)
 
 ```
 
+
+
+#### Refine DataFrame to show only robbery crimes in may 2020
+
+
+
 ```{r}
-##Refine DataFrame to show only robbery crimes in may 2020
+##
 p1_Crimes_may_2020_robbery <- pi_may_2020 %>% filter(pi_may_2020$Incident_Description == "Robbery")
 
 head(p1_Crimes_may_2020_robbery)
 
 ```
 
+
+
+#### Make Plotly Plot to show where robberies occured in May 2020 (Milestone 5)
+
+
+
 ```{r}
-## Make Plotly Plot to show where robberies occured in May 2020 (Milestone 5)
+## 
 p1_may_map_robbery <- ggplot() +
   geom_sf(data = censusDataShp, aes()) +
   geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type")
@@ -259,9 +425,18 @@ ggplotly(p1_may_map_robbery)
 
 
 
-##Start of Milestone 4 -----------------------------------------------------------------------------------------------------------------------------
+## Start of Milestone 4 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#### Make a plot overlaying the shapefile population data with the amounts of Part one crimes
+
+
+
+
 ```{r}
-##Make a plot overlaying the shapefile population data with the amounts of Part one crimes
+##
 p <- ggplot() +
   geom_sf(data = censusDataShp, aes(fill=censusDataShp$total_popu)) +
   geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type", fill= "Population")
@@ -269,8 +444,15 @@ p <- ggplot() +
 ggplotly(p)
 ```
 
+
+
+
+#### Make a plot overlaying the shapefile income data with the amounts of Part one crimes
+
+
+
 ```{r}
-##Make a plot overlaying the shapefile income data with the amounts of Part one crimes
+##
 p <- ggplot() +
   geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
   geom_point(data = p1_Crimes_may_2020_robbery, aes(x=p1_Crimes_may_2020_robbery$Longitude, y=p1_Crimes_may_2020_robbery$Latitude, color=p1_Crimes_may_2020_robbery$Incident_Description)) + labs(title="Location of Robberies in May of 2020", x="Longitude", y= "Latitude", color="Incident Type", fill= "Median Income")
@@ -279,8 +461,14 @@ ggplotly(p)
 ```
 
 
+
+
+#### Make new dataframe for p1_Crimes_may_2020_shoplifting
+
+
+
 ```{r}
-##Make new dataframe for p1_Crimes_may_2020_shoplifting
+##
 #Shoplifting
 
 p1_Crimes_may_2020_shoplifting <- pi_may_2020 %>% filter(pi_may_2020$Incident_Description == "Shoplifting")
@@ -292,17 +480,30 @@ p1_shoplift_robbery <-  rbind(p1_Crimes_may_2020_robbery,p1_Crimes_may_2020_shop
 ```
 
 
+
+
+#### Plot for location of Robberies and shoplifting incidents based with median income (Milestone 5)
+
+
+
+
+
 ```{r}
 
-## Plot for location of Robberies and shoplifting incidents based with median income (Milestone 5)
-p <- ggplot() +
-  geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
+## 
+p <- ggplot() + geom_sf(data = censusDataShp, aes(fill=censusDataShp$median_inc)) +
   geom_point(data = p1_shoplift_robbery, aes(x=p1_shoplift_robbery$Longitude, y=p1_shoplift_robbery$Latitude, color= p1_shoplift_robbery$Incident_Description))+
  labs(title="Location of Robberies and Shoplifting incidents in May of 2020", x="Longitude", y= "Latitude", color="Incident Description", fill= "Median Income")
 
 
 ggplotly(p)
 ```
+
+
+
+
+#### Graph Showing Locations of Robberies and Shoplifting based on population density (Milestone 5)
+
 
 
 ```{r}
